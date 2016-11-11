@@ -4,7 +4,7 @@ import org.jsoup.safety.Whitelist;
 
 import com.google.gson.Gson;
 
-class GsonWhitelistConfiguration extends BasicWhitelistConfiguration {
+public class GsonWhitelistConfiguration extends BasicWhitelistConfiguration {
 
   public static Whitelist whitelistFromJson(String json) {
     return fromJson(json).whitelist();

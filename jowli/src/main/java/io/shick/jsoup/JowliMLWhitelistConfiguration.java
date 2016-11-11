@@ -4,7 +4,7 @@ import static io.shick.jsoup.jowli.parser.JowliMLParser.ROOT;
 
 import org.jsoup.safety.Whitelist;
 
-class JowliMLWhitelistConfiguration extends BasicWhitelistConfiguration {
+public class JowliMLWhitelistConfiguration extends BasicWhitelistConfiguration {
 
   public static Whitelist whitelistFromJowliML(String jowliml) {
     return fromJowliML(jowliml).whitelist();
