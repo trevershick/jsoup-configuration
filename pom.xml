@@ -4,7 +4,7 @@
 
   <groupId>io.shick.jsoup</groupId>
   <artifactId>jsoup-configuration</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -25,7 +25,7 @@
     <connection>scm:git:git://github.com/trevershick/jsoup-configuration.git</connection>
     <developerConnection>scm:git:git@github.com:trevershick/jsoup-configuration.git</developerConnection>
     <url>git://github.com/trevershick/jsoup-configuration.git</url>
-    <tag>jsoup-configuration-1.0.1</tag>
+    <tag>HEAD</tag>
   </scm>
   <developers>
     <developer>
