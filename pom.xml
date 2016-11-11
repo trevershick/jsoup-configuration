@@ -13,6 +13,7 @@
   </properties>
 
   <name>JSoup Configuration Externalization</name>
+  <url>https://github.com/trevershick/jsoup-configuration</url>
   <description>${project.name}</description>
   <licenses>
     <license>
