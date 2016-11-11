@@ -11,6 +11,7 @@
     <version>1.0.1-SNAPSHOT</version>
   </parent>
 
+  <name>JSoup Configuration Externalization - Core</name>
 
   <dependencies>
     

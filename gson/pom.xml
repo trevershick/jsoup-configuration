@@ -9,6 +9,7 @@
     <artifactId>jsoup-configuration</artifactId>
     <version>1.0.1-SNAPSHOT</version>
   </parent>
+  <name>JSoup Configuration Externalization - Gson</name>
 
 
   
