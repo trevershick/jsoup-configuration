@@ -1,4 +1,4 @@
-package io.shick.jsoup.jowli.parser;
+package io.shick.jsoup.jowli;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -7,17 +7,71 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import io.shick.jsoup.MutableWhitelistConfiguration;
+import io.shick.jsoup.WhitelistConfigurationParserFactory;
 import io.shick.jsoup.jowli.ast.AllowedAttributes;
 import io.shick.jsoup.jowli.ast.AllowedTags;
 import io.shick.jsoup.jowli.ast.ConfigConsumer;
 import io.shick.jsoup.jowli.ast.EnforcedAttributes;
 import io.shick.jsoup.jowli.ast.Protocols;
 
+import java.text.ParseException;
 import java.util.List;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.safety.Whitelist;
 import org.junit.Test;
 
 public class JowliMLParserTest {
+
+  @Test(expected = ParseException.class)
+  public void invalidSyntaxYieldsParseException() throws ParseException {
+    WhitelistConfigurationParserFactory.newParser("jowli").parse("xxx");
+  }
+  
+  @Test
+  public void whitelist() throws ParseException {
+    final StringBuilder jowliml = new StringBuilder()
+      .append("t:a,b")
+      .append(";")
+      .append("a:blockquote[cite],a[href,rel]")
+      .append(";")
+      .append("e:a[rel:nofollow,x:y]")
+      .append(";")
+      .append("p:a[href:[ftp,http,https],z:[d]]")
+      ;
+    final Whitelist whitelist = new JowliMLParser().parse(jowliml.toString()).whitelist();
+
+    assertThat("Allowed Tag", Jsoup.isValid("<a>test</a>", whitelist), is(true));
+    assertThat("Allowed Tag", Jsoup.isValid("<b>test</b>", whitelist), is(true));
+
+    assertThat("Disallowed tag", Jsoup.isValid("<em>test</em>", whitelist), is(false));
+
+    assertThat("Allowed Attribute", Jsoup.isValid("<blockquote cite='test'>test</blockquote>", whitelist), is(true));
+
+    assertThat("Disallowed Attribute", Jsoup.isValid("<blockquote x='test'>test</blockquote>", whitelist), is(false));
+
+    assertThat("Allowed Protocol", Jsoup.isValid("<a href='http://somewhere'>test</a>", whitelist), is(true));
+    assertThat("Allowed Protocol", Jsoup.isValid("<a z='d://somewhere'>test</a>", whitelist), is(true));
+
+    assertThat("Disallowed Protocol", Jsoup.isValid("<a href='whatevs://somewhere'>test</a>", whitelist), is(false));
+    assertThat("Disallowed Protocol", Jsoup.isValid("<a z='b://somewhere'>test</a>", whitelist), is(false));
+
+    final Document.OutputSettings settings = new Document.OutputSettings().prettyPrint(false);
+
+    assertThat("Clean Disallowed Attribute",
+      Jsoup.clean("<blockquote x='test'>test</blockquote>", "", whitelist, settings),
+      is("<blockquote>test</blockquote>"));
+
+    assertThat("Clean Enforced Attribute",
+      Jsoup.clean("<a>test</a>", "", whitelist, settings),
+      is("<a x=\"y\" rel=\"nofollow\">test</a>"));
+
+    assertThat("Clean Disallowed Protocol",
+      Jsoup.clean("<a href='whatevs://somewhere'>test</a>", "", whitelist, settings),
+      is("<a x=\"y\" rel=\"nofollow\">test</a>"));
+  }
+
 
   @Test
   public void allowedTags() {

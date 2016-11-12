@@ -1,11 +1,11 @@
 package io.shick.jsoup;
 
 public interface MutableWhitelistConfiguration extends WhitelistConfiguration {
-  void allowTag(String tagName);
-  void enforceAttribute(String tagName, String attrName, String enforcedValue);
+  MutableWhitelistConfiguration allowTag(String tagName);
 
-  void allowProtocol(String tagName, String attrName, String protocol);
-  void allowAttribute(String tagName, String attrName);
+  MutableWhitelistConfiguration enforceAttribute(String tagName, String attrName, String enforcedValue);
 
+  MutableWhitelistConfiguration allowProtocol(String tagName, String attrName, String protocol);
 
+  MutableWhitelistConfiguration allowAttribute(String tagName, String attrName);
 }
