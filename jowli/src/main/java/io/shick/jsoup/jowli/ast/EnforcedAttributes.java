@@ -6,12 +6,25 @@ import java.util.List;
 
 import org.codehaus.jparsec.functors.Pair;
 
+/**
+ * <p>EnforcedAttributes class.</p>
+ *
+ * @author Trever Shick - trever@shick.io
+ */
 public final class EnforcedAttributes extends ValueObject<List<Pair<Tag, List<Pair<Attr, String>>>>> implements
   ConfigConsumer {
+  /**
+   * <p>Constructor for EnforcedAttributes.</p>
+   *
+   * @param v a {@link java.util.List} object.
+   */
   public EnforcedAttributes(List<Pair<Tag, List<Pair<Attr, String>>>> v) {
     super(v);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void accept(MutableWhitelistConfiguration c) {
     final List<Pair<Tag, List<Pair<Attr, String>>>> value = value();

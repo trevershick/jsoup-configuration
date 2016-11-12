@@ -20,19 +20,17 @@ public class GsonParserTest {
   public void badJsonYieldsParseException() throws ParseException {
     new GsonParser().parse("bad json");
   }
-  
+
   @Test
   public void verifyEmptyCollectionsNotNulls() throws ParseException {
     String json = "{\"tags\" : null, \"attributes\":null }";
 
     final WhitelistConfiguration c = new GsonParser().parse(json);
     assertThat(c.allowsTag("a"), is(false));
-    assertThat(c.allowsAttribute("x","any"), is(false));
+    assertThat(c.allowsAttribute("x", "any"), is(false));
 
     verifyNoNpes(c);
   }
-
-  
 
   @Test
   public void parseTags() throws ParseException {

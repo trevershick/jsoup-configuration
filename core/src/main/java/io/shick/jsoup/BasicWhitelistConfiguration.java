@@ -18,6 +18,11 @@ import java.util.function.Consumer;
 
 import org.jsoup.safety.Whitelist;
 
+/**
+ * <p>BasicWhitelistConfiguration class.</p>
+ *
+ * @author Trever Shick - trever@shick.io
+ */
 public class BasicWhitelistConfiguration implements MutableWhitelistConfiguration {
 
   private List<String> tags = null;
@@ -44,6 +49,9 @@ public class BasicWhitelistConfiguration implements MutableWhitelistConfiguratio
     return Optional.ofNullable(protocols).orElseGet(Collections::emptyMap);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public MutableWhitelistConfiguration allowTag(String tagName) {
     if (tags == null) {
       tags = new ArrayList();
@@ -52,32 +60,53 @@ public class BasicWhitelistConfiguration implements MutableWhitelistConfiguratio
     return this;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void allowedTags(Consumer<String> fn) {
     tags().forEach(fn);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void allowedAttributes(BiConsumer<String, List<String>> fn) {
     this.attributes().forEach(fn);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void enforcedAttributes(BiConsumer<String, Map<String, String>> fn) {
     enforcedAttributes().forEach(fn);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void allowedProtocols(BiConsumer<String, Map<String, List<String>>> fn) {
     protocols().forEach(fn);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean allowsTag(String tagName) {
     requireTagName(tagName);
     return tags().contains(tagName);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean hasAllowedAttributes(String tagName) {
     requireTagName(tagName);
     return attributes().containsKey(tagName);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public MutableWhitelistConfiguration allowAttribute(String tagName, String attrName) {
     requireTagName(tagName);
     requireAttrName(attrName);
@@ -88,29 +117,44 @@ public class BasicWhitelistConfiguration implements MutableWhitelistConfiguratio
     return this;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean allowsAttribute(String tagName, String attrName) {
     requireAttrName(attrName);
     return hasAllowedAttributes(tagName)
       && attributes().get(tagName).contains(attrName);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean hasEnforcedAttributes(String tagName) {
     requireTagName(tagName);
     return enforcedAttributes().containsKey(tagName);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean enforcesAttribute(String tagName, String attrName) {
     requireAttrName(attrName);
     return hasEnforcedAttributes(tagName)
       && enforcedAttributes().get(tagName).get(attrName) != null;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean enforcesAttribute(String tagName, String attrName, String enforcedValue) {
     requireEnforcedValue(enforcedValue);
     return enforcesAttribute(tagName, attrName)
       && enforcedAttributes().get(tagName).get(attrName).equals(enforcedValue);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public MutableWhitelistConfiguration enforceAttribute(String tagName, String attrName, String enforcedValue) {
     requireTagName(tagName);
     requireAttrName(attrName);
@@ -122,17 +166,26 @@ public class BasicWhitelistConfiguration implements MutableWhitelistConfiguratio
     return this;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean hasAllowedProtocols(String tagName) {
     requireTagName(tagName);
     return protocols().containsKey(tagName);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean hasAllowedProtocols(String tagName, String attrName) {
     requireAttrName(attrName);
     return hasAllowedProtocols(tagName)
       && protocols().get(tagName).containsKey(attrName);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public MutableWhitelistConfiguration allowProtocol(String tagName, String attrName, String protocol) {
     requireTagName(tagName);
     requireAttrName(attrName);
@@ -145,26 +198,38 @@ public class BasicWhitelistConfiguration implements MutableWhitelistConfiguratio
     return this;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean allowsProtocol(String tagName, String attrName, String protocol) {
     requireProtocol(protocol);
     return hasAllowedProtocols(tagName, attrName)
       && protocols().get(tagName).get(attrName).contains(protocol);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public Whitelist apply(Whitelist in) {
-    applyTags(in);
-    applyAttributes(in);
-    applyEnforcedAttributes(in);
-    applyProtocols(in);
-    return in;
+  public Whitelist apply(Whitelist whitelist) {
+    applyTags(whitelist);
+    applyAttributes(whitelist);
+    applyEnforcedAttributes(whitelist);
+    applyProtocols(whitelist);
+    return whitelist;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Whitelist whitelist() {
     return apply(Whitelist.none());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -180,11 +245,17 @@ public class BasicWhitelistConfiguration implements MutableWhitelistConfiguratio
       Objects.equals(protocols(), that.protocols());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int hashCode() {
     return Objects.hash(tags(), attributes(), enforcedAttributes(), protocols());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("BasicWhitelistConfiguration{");

@@ -27,6 +27,11 @@ import org.codehaus.jparsec.functors.Tuples;
 import org.codehaus.jparsec.pattern.Pattern;
 import org.codehaus.jparsec.pattern.Patterns;
 
+/**
+ * <p>JowliMLParser class.</p>
+ *
+ * @author Trever Shick - trever@shick.io
+ */
 public final class JowliMLParser implements WhitelistConfigurationParser {
 
   static final Parser<Void> RIGHT_BRACKET = isChar(']');
@@ -34,7 +39,7 @@ public final class JowliMLParser implements WhitelistConfigurationParser {
 
   static final Parser<Void> COMMA = isChar(',');
   static final Parser<Void> COLON = isChar(':');
-  
+
   static final Pattern ALPHA_TOKEN = Patterns.regex("[a-zA-Z]+");
 
   static final Parser<Prot> PROTOCOL_NAME =
@@ -42,7 +47,7 @@ public final class JowliMLParser implements WhitelistConfigurationParser {
 
   static final Parser<Tag> TAG_NAME =
     ALPHA_TOKEN.toScanner("tag name").source().map(Tag::new);
-  
+
   static final Parser<Attr> ATTR_NAME =
     ALPHA_TOKEN.toScanner("attribute name").source().map(Attr::new);
 
@@ -52,7 +57,7 @@ public final class JowliMLParser implements WhitelistConfigurationParser {
   static <T> Parser<T> bracketed(Parser<T> parser) {
     return between(LEFT_BRACKET, parser, RIGHT_BRACKET);
   }
-  
+
   static <C> Parser<List<C>> commaed(Parser<C> p) {
     return p.sepBy(COMMA);
   }
@@ -68,7 +73,7 @@ public final class JowliMLParser implements WhitelistConfigurationParser {
       COLON,
       ENFORCED_VALUE,
       (name, __, value) -> Tuples.pair(name, value));
-  
+
   static final Parser<Pair<Tag, List<Attr>>> TAG_LIST_OF_ATTR_NAMES =
     sequence(
       TAG_NAME,
@@ -80,13 +85,13 @@ public final class JowliMLParser implements WhitelistConfigurationParser {
       TAG_NAME,
       bracketed(commaed(ATTR_PROTOCOL_NAMES)),
       (name, list) -> Tuples.pair(name, list));
-  
+
   static final Parser<Pair<Tag, List<Pair<Attr, String>>>> TAG_ATTR_ENFORCED_VALUES =
     sequence(
       TAG_NAME,
-      bracketed(commaed(ATTR_ENFORCED_VALUE)), 
+      bracketed(commaed(ATTR_ENFORCED_VALUE)),
       (name, list) -> Tuples.pair(name, list));
-  
+
   static final Parser<AllowedTags> ALLOWED_TAGS_DIRECTIVE =
     sequence(
       isChar('t'),
@@ -121,18 +126,29 @@ public final class JowliMLParser implements WhitelistConfigurationParser {
       ENFORCED_ATTRIBUTES_DIRECTIVE,
       PROTOCOLS_DIRECTIVE,
       ALLOWED_TAGS_DIRECTIVE).sepBy(isChar(';'));
-  
-  
+
+  /**
+   * {@inheritDoc}
+   */
   public WhitelistConfiguration parse(CharSequence value) throws ParseException {
     return parse(new JowliMLWhitelistConfiguration(), value);
   }
-  
+
+  /**
+   * <p>parse.</p>
+   *
+   * @param c    a {@link io.shick.jsoup.jowli.JowliMLWhitelistConfiguration} object.
+   * @param from a {@link java.lang.CharSequence} object.
+   * @return a {@link io.shick.jsoup.WhitelistConfiguration} object.
+   * @throws java.text.ParseException if any.
+   */
   public WhitelistConfiguration parse(JowliMLWhitelistConfiguration c, CharSequence from) throws ParseException {
     try {
       ROOT.parse(from).stream()
         .forEach(consumer -> consumer.accept(c));
       return c;
-    } catch (ParserException p) {
+    }
+    catch (ParserException p) {
       throw new ParseException(p.getMessage(), p.getLocation().column);
     }
   }
@@ -140,5 +156,4 @@ public final class JowliMLParser implements WhitelistConfigurationParser {
   static {
     WhitelistConfigurationParserFactory.register("jowli", JowliMLParser::new);
   }
-
 }

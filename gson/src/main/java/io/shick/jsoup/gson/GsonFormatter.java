@@ -18,7 +18,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+/**
+ * <p>GsonFormatter class.</p>
+ *
+ * @author Trever Shick - trever@shick.io
+ */
 public class GsonFormatter implements WhitelistConfigurationFormatter {
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public CharSequence format(WhitelistConfiguration configuration) {
     return gson().toJson(requireNonNull(configuration, "configuration cannot be null"));

@@ -12,8 +12,16 @@ import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
+/**
+ * <p>JowliMLFormatter class.</p>
+ *
+ * @author Trever Shick - trever@shick.io
+ */
 public class JowliMLFormatter implements WhitelistConfigurationFormatter {
 
+  /**
+   * {@inheritDoc}
+   */
   public CharSequence format(WhitelistConfiguration configuration) {
     final AtomicReference<CharSequence> ref = new AtomicReference<>();
     root(requireNonNull(configuration, "configuration cannot be null"), ref::set);

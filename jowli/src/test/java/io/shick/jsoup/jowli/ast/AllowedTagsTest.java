@@ -18,7 +18,7 @@ public class AllowedTagsTest {
     final MutableWhitelistConfiguration configuration = mock(MutableWhitelistConfiguration.class);
 
     final List<Tag> data = list(new Tag("a"), new Tag("b"), new Tag("c"));
-    
+
     final AllowedTags o = new AllowedTags(data);
 
     // when

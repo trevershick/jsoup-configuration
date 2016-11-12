@@ -28,7 +28,7 @@ public class JowliMLParserTest {
   public void invalidSyntaxYieldsParseException() throws ParseException {
     WhitelistConfigurationParserFactory.newParser("jowli").parse("xxx");
   }
-  
+
   @Test
   public void whitelist() throws ParseException {
     final StringBuilder jowliml = new StringBuilder()
@@ -38,8 +38,7 @@ public class JowliMLParserTest {
       .append(";")
       .append("e:a[rel:nofollow,x:y]")
       .append(";")
-      .append("p:a[href:[ftp,http,https],z:[d]]")
-      ;
+      .append("p:a[href:[ftp,http,https],z:[d]]");
     final Whitelist whitelist = new JowliMLParser().parse(jowliml.toString()).whitelist();
 
     assertThat("Allowed Tag", Jsoup.isValid("<a>test</a>", whitelist), is(true));
@@ -71,7 +70,6 @@ public class JowliMLParserTest {
       Jsoup.clean("<a href='whatevs://somewhere'>test</a>", "", whitelist, settings),
       is("<a x=\"y\" rel=\"nofollow\">test</a>"));
   }
-
 
   @Test
   public void allowedTags() {

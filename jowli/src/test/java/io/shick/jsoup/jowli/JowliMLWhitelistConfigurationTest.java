@@ -18,7 +18,7 @@ public class JowliMLWhitelistConfigurationTest {
   public void toStringFormatsJowli() throws ParseException {
     String text = "t:a,b,c;a:dog[a,b,c]";
     final WhitelistConfiguration c = new JowliMLParser().parse(text);
-    
+
     assertThat(c.toString(), is(new JowliMLFormatter().format(c)));
   }
 }

@@ -22,37 +22,41 @@ public class GsonFormatterTest {
     final WhitelistConfiguration wlc2 = new GsonParser().parse(json);
     assertThat(wlc, is(wlc2));
   }
+
   @Test
   public void fullCircleWithAllowedAttributes() throws ParseException {
     WhitelistConfiguration wlc = new BasicWhitelistConfiguration()
-      .allowAttribute("blockquote","cite")
-      .allowAttribute("a","href");
+      .allowAttribute("blockquote", "cite")
+      .allowAttribute("a", "href");
     final String json = new GsonFormatter().format(wlc).toString();
     assertThat(json, is("{\"attributes\":{\"a\":[\"href\"],\"blockquote\":[\"cite\"]}}"));
     final WhitelistConfiguration wlc2 = new GsonParser().parse(json);
     assertThat(wlc, is(wlc2));
   }
+
   @Test
   public void fullCircleWithEnforcedAttributes() throws ParseException {
     WhitelistConfiguration wlc = new BasicWhitelistConfiguration()
-      .enforceAttribute("a","rel","nofollow");
+      .enforceAttribute("a", "rel", "nofollow");
     final String json = new GsonFormatter().format(wlc).toString();
     assertThat(json, is("{\"enforcedAttributes\":{\"a\":{\"rel\":\"nofollow\"}}}"));
     final WhitelistConfiguration wlc2 = new GsonParser().parse(json);
     assertThat(wlc, is(wlc2));
   }
+
   @Test
   public void fullCircleWithProtocols() throws ParseException {
     WhitelistConfiguration wlc = new BasicWhitelistConfiguration()
-      .allowProtocol("a","href","mailto");
+      .allowProtocol("a", "href", "mailto");
     final String json = new GsonFormatter().format(wlc).toString();
-    assertThat(json, is( "{\"protocols\":{\"a\":{\"href\":[\"mailto\"]}}}"));
+    assertThat(json, is("{\"protocols\":{\"a\":{\"href\":[\"mailto\"]}}}"));
     final WhitelistConfiguration wlc2 = new GsonParser().parse(json);
     assertThat(wlc, is(wlc2));
   }
+
   @Test
   public void format() throws ParseException {
-    final String json="\n"
+    final String json = "\n"
       + "{\n"
       + "  \"tags\" : [\"a\",\"b\"],\n"
       + "  \"attributes\" : {\n"
@@ -74,14 +78,13 @@ public class GsonFormatterTest {
     final String actual = new GsonFormatter().format(config).toString();
     final WhitelistConfiguration config2 = new GsonParser().parse(actual);
 
-    assertThat(stripped(json),is(stripped(actual)));
+    assertThat(stripped(json), is(stripped(actual)));
     assertThat(config, is(config2));
   }
 
-
   @Test
   public void emptyCollectionsAreNull() throws ParseException {
-    final String json="\n"
+    final String json = "\n"
       + "{\n"
       + "  \"tags\" : [],\n"
       + "  \"attributes\" : {},\n"
@@ -91,14 +94,14 @@ public class GsonFormatterTest {
 
     final WhitelistConfiguration config = new GsonParser().parse(json);
     final String actual = new GsonFormatter().format(config).toString();
-    
+
     final WhitelistConfiguration config2 = new GsonParser().parse(actual);
 
-    assertThat(actual,is("{}"));
+    assertThat(actual, is("{}"));
     assertThat(config, is(config2));
   }
 
   private String stripped(String json) {
-    return json.replaceAll("[\\n\\s]","");
+    return json.replaceAll("[\\n\\s]", "");
   }
 }

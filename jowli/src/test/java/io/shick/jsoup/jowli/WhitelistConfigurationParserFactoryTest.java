@@ -14,7 +14,7 @@ public class WhitelistConfigurationParserFactoryTest {
   @Test
   public void test() {
     assertThat("Only the jowli parser",
-      WhitelistConfigurationParserFactory.registeredParserTypes().size(), 
+      WhitelistConfigurationParserFactory.registeredParserTypes().size(),
       is(1));
 
     assertThat(WhitelistConfigurationParserFactory.newParser("jowli"),

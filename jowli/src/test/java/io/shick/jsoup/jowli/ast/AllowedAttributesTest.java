@@ -18,18 +18,18 @@ public class AllowedAttributesTest {
   @Test
   public void allowedAttributes() {
     final MutableWhitelistConfiguration configuration = mock(MutableWhitelistConfiguration.class);
-    
+
     final List<Pair<Tag, List<Attr>>> data = list(
       pair(new Tag("t1"), list(new Attr("a1"), new Attr("a2")))
     );
     final AllowedAttributes o = new AllowedAttributes(data);
-    
+
     // when
     o.accept(configuration);
-    
+
     // then
-    verify(configuration).allowAttribute("t1","a1");
-    verify(configuration).allowAttribute("t1","a2");
+    verify(configuration).allowAttribute("t1", "a1");
+    verify(configuration).allowAttribute("t1", "a2");
     verifyNoMoreInteractions(configuration);
   }
 }

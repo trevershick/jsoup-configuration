@@ -42,7 +42,7 @@ public class BasicWhitelistConfigurationTest {
     config.allowAttribute("a", "href");
     assertThat(config.allowsAttribute("a", "href"), is(true));
     assertThat(config.allowsAttribute("a", "not-href"), is(false));
-    
+
     config.allowAttribute("blockquote", "cite");
     config.allowAttribute("a", "rel");
 
@@ -56,7 +56,7 @@ public class BasicWhitelistConfigurationTest {
     assertThat(x.containsKey("blockquote"), is(true));
     assertThat(x.get("blockquote"), is(Func.list("cite")));
   }
-  
+
   @Test
   public void enforceAttribute() {
     assertThat(config.enforcesAttribute("a", "rel", "nofollow"), is(false));
@@ -81,8 +81,6 @@ public class BasicWhitelistConfigurationTest {
     assertThat(x.get("a").get("rel"), is("nofollow"));
 
     assertThat(x.get("blockquote").get("cite"), is("noone"));
-
-
   }
 
   @Test
@@ -91,10 +89,9 @@ public class BasicWhitelistConfigurationTest {
     config.allowProtocol("a", "href", "mailto");
     assertThat(config.allowsProtocol("a", "href", "mailto"), is(true));
     assertThat(config.allowsProtocol("a", "href", "not-mailto"), is(false));
-    
+
     assertThat(config.hasAllowedProtocols("a", "href"), is(true));
     assertThat(config.hasAllowedProtocols("a", "not-href"), is(false));
-
 
     config.allowProtocol("a", "href", "http");
     config.allowProtocol("img", "src", "https");
@@ -106,10 +103,10 @@ public class BasicWhitelistConfigurationTest {
     assertThat(x.containsKey("a"), is(true));
     assertThat(x.containsKey("img"), is(true));
 
-    assertThat(x.get("a").get("href"), is(Func.list("mailto","http")));
+    assertThat(x.get("a").get("href"), is(Func.list("mailto", "http")));
     assertThat(x.get("img").get("src"), is(Func.list("https")));
   }
-  
+
   @Test
   public void apply() {
     final Whitelist wl = mock(Whitelist.class);
@@ -130,9 +127,8 @@ public class BasicWhitelistConfigurationTest {
     verify(wl).addAttributes("blockquote", new String[]{"cite"});
     verify(wl).addEnforcedAttribute("a", "rel", "nofollow");
     verify(wl).addProtocols("a", "href", new String[]{"ftp", "http", "https", "mailto"});
-
   }
-  
+
   @Test
   public void bigThree() {
     final MutableWhitelistConfiguration o1 = new BasicWhitelistConfiguration()
@@ -153,10 +149,10 @@ public class BasicWhitelistConfigurationTest {
       .enforceAttribute("a", "rel", "nofollow")
       .allowProtocol("a", "href", "mailto");
 
-    assertThat(o1.equals(o1),is(true));
-    assertThat(o1.equals(null),is(false));
-    assertThat(o1.equals("non config"),is(false));
-    
+    assertThat(o1.equals(o1), is(true));
+    assertThat(o1.equals(null), is(false));
+    assertThat(o1.equals("non config"), is(false));
+
     assertThat(o1, is(equalTo(o2)));
     assertThat(o1.hashCode(), is(o2.hashCode()));
     assertThat(o1.toString(), is(o2.toString()));
@@ -165,7 +161,7 @@ public class BasicWhitelistConfigurationTest {
     assertThat(o1.hashCode(), is(not(o3.hashCode())));
     assertThat(o1.toString(), is(not(o3.toString())));
   }
-  
+
   @Test
   public void whitelist() {
 
@@ -204,6 +200,6 @@ public class BasicWhitelistConfigurationTest {
 
     assertThat("Clean Disallowed Protocol",
       Jsoup.clean("<a href='whatevs://somewhere'>test</a>", "", whitelist, settings),
-      is("<a rel=\"nofollow\">test</a>"));    
+      is("<a rel=\"nofollow\">test</a>"));
   }
 }

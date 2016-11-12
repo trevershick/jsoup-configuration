@@ -16,9 +16,8 @@ public class WhitelistConfigurationParserFactoryTest {
   @Test
   public void registrationAndInstantiation() {
     assertThat("the core has no access to any parser,so none are registered",
-      WhitelistConfigurationParserFactory.registeredParserTypes().isEmpty(), 
+      WhitelistConfigurationParserFactory.registeredParserTypes().isEmpty(),
       is(true));
-
 
     final WhitelistConfigurationParser parser = mock(WhitelistConfigurationParser.class);
     WhitelistConfigurationParserFactory.register("wowzer", () -> parser);
