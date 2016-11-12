@@ -4,7 +4,7 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="JSoup-Configuration : Simple library that allows you you externalize JSoup configuration in either JSON or JowliML (a very terse grammar)">
+    <meta name="description" content="JSoup-Configuration : Externalize your JSoup configuration!">
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -19,7 +19,7 @@
           <a id="forkme_banner" href="https://github.com/trevershick/jsoup-configuration">View on GitHub</a>
 
           <h1 id="project_title">JSoup-Configuration</h1>
-          <h2 id="project_tagline">Simple library that allows you you externalize JSoup configuration in either JSON or JowliML (a very terse grammar)</h2>
+          <h2 id="project_tagline">Externalize your JSoup configuration!</h2>
 
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/trevershick/jsoup-configuration/zipball/master">Download this project as a .zip file</a>
@@ -31,30 +31,93 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>
-<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
-
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here <a href="https://guides.github.com/features/mastering-markdown/">using GitHub Flavored Markdown</a>, select a template crafted by a designer, and publish. After your page is generated, you can check out the new <code>gh-pages</code> branch locally. If you’re using GitHub Desktop, simply sync your repository and you’ll see the new branch.</p>
-
-<h3>
-<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Designer Templates</h3>
-
-<p>We’ve crafted some handsome templates for you to use. Go ahead and click 'Continue to layouts' to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved.</p>
+        <p><a href="http://mvnrepository.com/artifact/io.shick.jsoup/jsoup-configuration"><img src="https://maven-badges.herokuapp.com/maven-central/io.shick.jsoup/jsoup-configuration/badge.svg?style=flat" alt="Maven Status"></a>
+<a href="https://travis-ci.org/trevershick/jsoup-configuration"><img src="https://travis-ci.org/trevershick/jsoup-configuration.svg?branch=master" alt="Build Status"></a>
+<a href="https://coveralls.io/github/trevershick/jsoup-configuration?branch=master"><img src="https://coveralls.io/repos/github/trevershick/jsoup-configuration/badge.svg?branch=master" alt="Coverage Status"></a>
+<a href="https://www.versioneye.com/user/projects/58253d34613b6801fb37e874"><img src="https://www.versioneye.com/user/projects/58253d34613b6801fb37e874/badge.svg?style=flat-square" alt="Dependency Status"></a>
+<a href="http://www.apache.org/licenses/LICENSE-2.0.html"><img src="http://img.shields.io/:license-mit-brightgreen.svg" alt="License"></a></p>
 
 <h3>
-<a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating pages manually</h3>
+<a id="welcome" class="anchor" href="#welcome" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome</h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>This library was born from the need to externalize JSoup's HTML Whitelist.  Deploying code
+for constant tweaks to the Whitelist's configuration was cumbersome.  This library allows
+me to update the configuration outside the code (in JSON or JowliML).</p>
 
 <h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h3>
 
-<p>You can @mention a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor’s GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>Pick your flavor, using JSON or JowliML and include the appropriate dependency.</p>
+
+<p>In pom.xml, add the following:</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
+    &lt;<span class="pl-ent">groupId</span>&gt;io.shick.jsoup&lt;/<span class="pl-ent">groupId</span>&gt;
+    &lt;<span class="pl-ent">artifactId</span>&gt;jsoup-configuration-gson&lt;/<span class="pl-ent">artifactId</span>&gt;
+    &lt;<span class="pl-ent">version</span>&gt;1.0.1&lt;/<span class="pl-ent">version</span>&gt;
+&lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
+
+<p>Then in your Java code</p>
+
+<div class="highlight highlight-source-java"><pre>
+<span class="pl-c">// you can simply instantiate the parser</span>
+<span class="pl-k">final</span> <span class="pl-smi">Whitelist</span> whitelist <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">GsonParser</span>()<span class="pl-k">.</span>parse(json)<span class="pl-k">.</span>whitelist();
+
+<span class="pl-c">// or you can get a parser by 'type', (either gson or jowli)</span>
+<span class="pl-k">final</span> <span class="pl-smi">Whitelist</span> whitelist <span class="pl-k">=</span> <span class="pl-smi">WhitelistConfigurationParserFactory</span><span class="pl-k">.</span>newParser(<span class="pl-s"><span class="pl-pds">"</span>gson<span class="pl-pds">"</span></span>)<span class="pl-k">.</span>parse(json)<span class="pl-k">.</span>whitelist();
+
+<span class="pl-c">// or you can append to an existing whitelist</span>
+<span class="pl-k">final</span> <span class="pl-smi">Whitelist</span> whitelist <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">GsonParser</span>()<span class="pl-k">.</span>parse(json)<span class="pl-k">.</span>apply(<span class="pl-smi">Whitelist</span><span class="pl-k">.</span>basic());
+
+<span class="pl-c">// you can construct a new config and serialize it out too!</span>
+<span class="pl-smi">WhitelistConfiguration</span> wlc <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">BasicWhitelistConfiguration</span>()<span class="pl-k">.</span>enforceAttribute(<span class="pl-s"><span class="pl-pds">"</span>a<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>rel<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>nofollow<span class="pl-pds">"</span></span>);
+
+<span class="pl-k">final</span> <span class="pl-smi">String</span> jowli <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">JowliMLFormatter</span>()<span class="pl-k">.</span>format(wlc)<span class="pl-k">.</span>toString();   <span class="pl-c">//jowliml</span>
+<span class="pl-k">final</span> <span class="pl-smi">String</span> json <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">GsonFormatter</span>()<span class="pl-k">.</span>format(wlc)<span class="pl-k">.</span>toString();       <span class="pl-c">//json</span>
+
+</pre></div>
+
+<h3>
+<a id="formats" class="anchor" href="#formats" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Formats</h3>
+
+<h4>
+<a id="json" class="anchor" href="#json" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>JSON</h4>
+
+<div class="highlight highlight-source-json"><pre>{
+  <span class="pl-s"><span class="pl-pds">"</span>tags<span class="pl-pds">"</span></span> : [<span class="pl-s"><span class="pl-pds">"</span>a<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>b<span class="pl-pds">"</span></span>],
+  <span class="pl-s"><span class="pl-pds">"</span>attributes<span class="pl-pds">"</span></span> : {
+    <span class="pl-s"><span class="pl-pds">"</span>blockquote<span class="pl-pds">"</span></span>: [<span class="pl-s"><span class="pl-pds">"</span>cite<span class="pl-pds">"</span></span>]
+    },
+  <span class="pl-s"><span class="pl-pds">"</span>enforcedAttributes<span class="pl-pds">"</span></span>: {
+    <span class="pl-s"><span class="pl-pds">"</span>a<span class="pl-pds">"</span></span> : {
+      <span class="pl-s"><span class="pl-pds">"</span>rel<span class="pl-pds">"</span></span> : <span class="pl-s"><span class="pl-pds">"</span>nofollow<span class="pl-pds">"</span></span>
+      }
+    },
+  <span class="pl-s"><span class="pl-pds">"</span>protocols<span class="pl-pds">"</span></span> : {
+    <span class="pl-s"><span class="pl-pds">"</span>a<span class="pl-pds">"</span></span> : { 
+      <span class="pl-s"><span class="pl-pds">"</span>href<span class="pl-pds">"</span></span>:[<span class="pl-s"><span class="pl-pds">"</span>ftp<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>http<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>https<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>mailto<span class="pl-pds">"</span></span>]
+      }
+    }
+}</pre></div>
+
+<h4>
+<a id="jowliml" class="anchor" href="#jowliml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>JowliML</h4>
+
+<p>The point of JowliML is to provide a very terse representation of the whitelist rules.
+What you see below is the same as the above JSON but in a much more compact,
+externalized configuration friendly format.</p>
+
+<pre><code>(all on one line)
+t:a,b;
+a:blockquote[cite],a[href,rel];
+e:a[rel:nofollow];
+p:a[href:[ftp,http,https,mailto]]
+</code></pre>
 
 <h3>
 <a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
 
-<p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
+<p>Having trouble with Pages? Check the readme or add an <a href="https://github.com/trevershick/jsoup-configuration/issues">issue</a> and we’ll help you sort it out.</p>
       </section>
     </div>
 
