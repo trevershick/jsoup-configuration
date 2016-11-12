@@ -1,6 +1,6 @@
 package io.shick.jsoup.jowli.ast;
 
-import static io.shick.jsoup.Func.list;
+import static io.shick.jsoup.util.Func.list;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
