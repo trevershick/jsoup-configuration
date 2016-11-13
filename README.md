@@ -12,6 +12,7 @@ This library was born from the need to externalize JSoup's HTML Whitelist.  Depl
 for constant tweaks to the Whitelist's configuration was cumbersome.  This library allows
 me to update the configuration outside the code (in JSON or JowliML).
 
+
 Usage
 -----
 Pick your flavor, using JSON or JowliML and include the appropriate dependency.
