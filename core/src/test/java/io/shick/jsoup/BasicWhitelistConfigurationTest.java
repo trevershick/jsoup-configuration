@@ -23,6 +23,11 @@ public class BasicWhitelistConfigurationTest {
 
   final BasicWhitelistConfiguration config = new BasicWhitelistConfiguration();
 
+  @Test(expected = IllegalStateException.class)
+  public void invalidBase() {
+    config.base("invalid").whitelist();
+  }
+  
   @Test
   public void tags() {
     assertThat(config.allowsTag("a"), is(false));
@@ -166,6 +171,7 @@ public class BasicWhitelistConfigurationTest {
   public void whitelist() {
 
     final Whitelist whitelist = new BasicWhitelistConfiguration()
+      .base("none")
       .allowTag("a")
       .allowTag("b")
       .allowAttribute("blockquote", "cite")

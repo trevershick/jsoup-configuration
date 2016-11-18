@@ -15,6 +15,11 @@ import org.jsoup.safety.Whitelist;
 public interface WhitelistConfiguration {
 
   /**
+   * @return the name of the 'base' whitelist used when {@link #whitelist()} is called.
+   */
+  String base();
+
+  /**
    * <p><em>fn</em> will be called once for each allowed tag.</p>
    *
    * @param fn (non null) a {@link java.util.function.Consumer} object.
@@ -134,4 +139,5 @@ public interface WhitelistConfiguration {
    * @return a configured {@link org.jsoup.safety.Whitelist} object.
    */
   Whitelist whitelist();
+
 }

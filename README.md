@@ -56,6 +56,7 @@ Formats
 JSON
 ```json
 {
+  "base" : "basic", /* basic, basicwithimages, relaxed, none, or null */
   "tags" : ["a","b"],
   "attributes" : {
     "blockquote": ["cite"]
@@ -82,11 +83,26 @@ externalized configuration friendly format.
 
 ```
 (all on one line)
+b:b;    /* note this can be b=basic, i=basicwithimages, n=none, r=relaxed */
 t:a,b;
 a:blockquote[cite],a[href,rel];
 e:a[rel:nofollow];
 p:a[href:[ftp,http,https,mailto]]
 ```
+
+All directives are optional and additive.  In the case of 'b', the last one wins.  What? Basically...
+
+```
+t:a,b
+```
+
+is equivalent to :
+
+```
+t:a;t:b
+```
+
+
 LICENSE
 -------
 MIT

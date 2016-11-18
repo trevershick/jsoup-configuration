@@ -44,6 +44,16 @@ public class GsonParserTest {
   }
 
   @Test
+  public void parseBase() throws ParseException {
+    String json = "{ \"base\" : \"basic\" }";
+
+    final WhitelistConfiguration c = new GsonParser().parse(json);
+    assertThat(c.base(), is("basic"));
+    verifyNoNpes(c);
+  }
+
+
+  @Test
   public void parseAttributes() throws ParseException {
     String json = "{"
       + "  \"attributes\" : {\n"
@@ -149,6 +159,7 @@ public class GsonParserTest {
   public void whitelist() throws ParseException {
     final String json = "\n"
       + "{\n"
+      + "  \"base\" : \"none\",\n"
       + "  \"tags\" : [\"a\",\"b\"],\n"
       + "  \"attributes\" : {\n"
       + "    \"blockquote\": [\"cite\"]\n"

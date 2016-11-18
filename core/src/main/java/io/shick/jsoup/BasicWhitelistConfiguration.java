@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.jsoup.safety.Whitelist;
 
@@ -25,6 +26,8 @@ import org.jsoup.safety.Whitelist;
  */
 public class BasicWhitelistConfiguration implements MutableWhitelistConfiguration {
 
+  private String base = null;
+  
   private List<String> tags = null;
 
   private Map<String, List<String>> attributes = null;
@@ -47,6 +50,15 @@ public class BasicWhitelistConfiguration implements MutableWhitelistConfiguratio
 
   private Map<String, Map<String, List<String>>> protocols() {
     return Optional.ofNullable(protocols).orElseGet(Collections::emptyMap);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @return
+   */
+  @Override
+  public String base() {
+    return base;
   }
 
   /**
@@ -211,6 +223,15 @@ public class BasicWhitelistConfiguration implements MutableWhitelistConfiguratio
    * {@inheritDoc}
    */
   @Override
+  public MutableWhitelistConfiguration base(String base) {
+    this.base = base;
+    return this;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public Whitelist apply(Whitelist whitelist) {
     applyTags(whitelist);
     applyAttributes(whitelist);
@@ -224,7 +245,15 @@ public class BasicWhitelistConfiguration implements MutableWhitelistConfiguratio
    */
   @Override
   public Whitelist whitelist() {
-    return apply(Whitelist.none());
+    // use the supplier, but if there isn't one then use 'Whitelist.none()'
+    final String b = Optional.ofNullable(this.base)
+      .orElse(BaseFactories.NONE);
+
+    final Supplier<Whitelist> whitelistSupplier = Optional.ofNullable(b)
+      .map(BaseFactories.FACTORIES::get)
+      .orElseThrow(() -> new IllegalStateException("Invalid base: " + b));
+
+    return apply(whitelistSupplier.get());
   }
 
   /**
