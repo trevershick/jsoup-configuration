@@ -2,11 +2,14 @@ package io.shick.jsoup.jowli;
 
 import static java.util.Objects.requireNonNull;
 
+import io.shick.jsoup.BaseFactories;
 import io.shick.jsoup.WhitelistConfiguration;
 import io.shick.jsoup.WhitelistConfigurationFormatter;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicReference;
@@ -18,6 +21,24 @@ import java.util.function.Consumer;
  * @author Trever Shick - trever@shick.io
  */
 public class JowliMLFormatter implements WhitelistConfigurationFormatter {
+  private static final Map<String,Character> FACTORY_TO_JOWLI_LETTER;
+
+  public static final char LETTER_BASIC = 'b';
+
+  public static final char LETTER_BASICWITHIMAGES = 'i';
+
+  public static final char LETTER_RELAXED = 'r';
+
+  public static final char LETTER_NONE = 'n';
+
+  static {
+    Map<String,Character> m = new HashMap<>();
+    m.put(BaseFactories.BASIC, LETTER_BASIC);
+    m.put(BaseFactories.BASICWITHIMAGES, LETTER_BASICWITHIMAGES);
+    m.put(BaseFactories.RELAXED, LETTER_RELAXED);
+    m.put(BaseFactories.NONE, LETTER_NONE);
+    FACTORY_TO_JOWLI_LETTER = m;
+  }
 
   /**
    * {@inheritDoc}
@@ -30,6 +51,7 @@ public class JowliMLFormatter implements WhitelistConfigurationFormatter {
 
   private void root(WhitelistConfiguration config, Consumer<CharSequence> c) {
     final StringJoiner sj = new StringJoiner(";");
+    baseDirective(config, sj::add);
     tagsDirective(config, sj::add);
     allowedAttributesDirective(config, sj::add);
     enforcedAttributesDirective(config, sj::add);
@@ -113,6 +135,19 @@ public class JowliMLFormatter implements WhitelistConfigurationFormatter {
     config.allowedTags(sj::add);
     if (sj.length() > 0) {
       c.accept(new StringBuilder("t:").append(sj.toString()));
+    }
+  }
+
+  /**
+   * "b:b"
+   *
+   * @param config
+   * @param c
+   */
+  private void baseDirective(WhitelistConfiguration config, Consumer<CharSequence> c) {
+    String factory = config.base();
+    if (factory != null) {
+      c.accept(new StringBuilder("b:").append(FACTORY_TO_JOWLI_LETTER.get(factory)));
     }
   }
 

@@ -1,11 +1,22 @@
 package io.shick.jsoup;
 
+import org.jsoup.safety.Whitelist;
+
 /**
  * <p>MutableWhitelistConfiguration interface.</p>
  *
  * @author Trever Shick - trever@shick.io
  */
 public interface MutableWhitelistConfiguration extends WhitelistConfiguration {
+
+  /**
+   * <p>Sets the base whitelist to use when configuring a {@link Whitelist}, 'none' is the default value.</p>
+   * 
+   * @param name an instance of whitelist to use as the base whitelist
+   * @return a {@link io.shick.jsoup.MutableWhitelistConfiguration} object.
+   */
+  MutableWhitelistConfiguration base(String name);
+  
   /**
    * <p>Add an allowed tag to the configuration</p>
    *

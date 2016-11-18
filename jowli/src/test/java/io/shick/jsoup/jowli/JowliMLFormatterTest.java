@@ -21,9 +21,9 @@ public class JowliMLFormatterTest {
   @Test
   public void fullCircleWithNothing() throws ParseException {
     WhitelistConfiguration wlc = new BasicWhitelistConfiguration();
-    final String json = new JowliMLFormatter().format(wlc).toString();
-    assertThat(json, is(""));
-    final WhitelistConfiguration wlc2 = new JowliMLParser().parse(json);
+    final String jowliml = new JowliMLFormatter().format(wlc).toString();
+    assertThat(jowliml, is(""));
+    final WhitelistConfiguration wlc2 = new JowliMLParser().parse(jowliml);
     assertThat(wlc, is(wlc2));
   }
 
@@ -32,9 +32,9 @@ public class JowliMLFormatterTest {
     WhitelistConfiguration wlc = new BasicWhitelistConfiguration()
       .allowTag("blockquote")
       .allowTag("b");
-    final String json = new JowliMLFormatter().format(wlc).toString();
-    assertThat(json, is("t:blockquote,b"));
-    final WhitelistConfiguration wlc2 = new JowliMLParser().parse(json);
+    final String jowliml = new JowliMLFormatter().format(wlc).toString();
+    assertThat(jowliml, is("t:blockquote,b"));
+    final WhitelistConfiguration wlc2 = new JowliMLParser().parse(jowliml);
     assertThat(wlc, is(wlc2));
   }
 
@@ -43,9 +43,9 @@ public class JowliMLFormatterTest {
     WhitelistConfiguration wlc = new BasicWhitelistConfiguration()
       .allowAttribute("blockquote", "cite")
       .allowAttribute("a", "href");
-    final String json = new JowliMLFormatter().format(wlc).toString();
-    assertThat(json, is("a:a[href],blockquote[cite]"));
-    final WhitelistConfiguration wlc2 = new JowliMLParser().parse(json);
+    final String jowliml = new JowliMLFormatter().format(wlc).toString();
+    assertThat(jowliml, is("a:a[href],blockquote[cite]"));
+    final WhitelistConfiguration wlc2 = new JowliMLParser().parse(jowliml);
     assertThat(wlc, is(wlc2));
   }
 
@@ -53,9 +53,9 @@ public class JowliMLFormatterTest {
   public void fullCircleWithEnforcedAttributes() throws ParseException {
     WhitelistConfiguration wlc = new BasicWhitelistConfiguration()
       .enforceAttribute("a", "rel", "nofollow");
-    final String json = new JowliMLFormatter().format(wlc).toString();
-    assertThat(json, is("e:a[rel:nofollow]"));
-    final WhitelistConfiguration wlc2 = new JowliMLParser().parse(json);
+    final String jowliml = new JowliMLFormatter().format(wlc).toString();
+    assertThat(jowliml, is("e:a[rel:nofollow]"));
+    final WhitelistConfiguration wlc2 = new JowliMLParser().parse(jowliml);
     assertThat(wlc, is(wlc2));
   }
 
@@ -64,11 +64,18 @@ public class JowliMLFormatterTest {
     final WhitelistConfiguration wlc = new BasicWhitelistConfiguration()
       .allowProtocol("a", "href", "mailto");
 
-    final String json = new JowliMLFormatter().format(wlc).toString();
-    final WhitelistConfiguration wlc2 = new JowliMLParser().parse(json);
+    final String jowliml = new JowliMLFormatter().format(wlc).toString();
+    final WhitelistConfiguration wlc2 = new JowliMLParser().parse(jowliml);
 
-    assertThat(json, is("p:a[href:[mailto]]"));
+    assertThat(jowliml, is("p:a[href:[mailto]]"));
     assertThat(wlc, is(wlc2));
+  }
+
+  @Test
+  public void formatJustBase() throws ParseException {
+    final String jowliml = "b:r";
+
+    verifyInAndOutAreSame(jowliml);
   }
 
   @Test
@@ -81,7 +88,7 @@ public class JowliMLFormatterTest {
   @Test
   public void formatAll() throws ParseException {
     final String jowliml
-      = "t:a,b;a:a[href,rel],blockquote[cite];e:a[rel:nofollow,x:y];p:a[z:[d],href:[ftp,http,https]]";
+      = "b:n;t:a,b;a:a[href,rel],blockquote[cite];e:a[rel:nofollow,x:y];p:a[z:[d],href:[ftp,http,https]]";
 
     verifyInAndOutAreSame(jowliml);
   }

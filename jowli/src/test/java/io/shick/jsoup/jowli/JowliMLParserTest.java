@@ -10,6 +10,7 @@ import io.shick.jsoup.MutableWhitelistConfiguration;
 import io.shick.jsoup.WhitelistConfigurationParserFactory;
 import io.shick.jsoup.jowli.ast.AllowedAttributes;
 import io.shick.jsoup.jowli.ast.AllowedTags;
+import io.shick.jsoup.jowli.ast.BaseWhitelist;
 import io.shick.jsoup.jowli.ast.ConfigConsumer;
 import io.shick.jsoup.jowli.ast.EnforcedAttributes;
 import io.shick.jsoup.jowli.ast.Protocols;
@@ -70,7 +71,7 @@ public class JowliMLParserTest {
       Jsoup.clean("<a href='whatevs://somewhere'>test</a>", "", whitelist, settings),
       is("<a x=\"y\" rel=\"nofollow\">test</a>"));
   }
-
+  
   @Test
   public void allowedTags() {
 
@@ -102,6 +103,19 @@ public class JowliMLParserTest {
 
     verify(c).allowAttribute("cat", "color");
     verify(c).allowAttribute("cat", "size");
+    verifyNoMoreInteractions(c);
+  }
+
+  @Test
+  public void base() {
+    final BaseWhitelist o = JowliMLParser.BASE_DIRECTIVE
+      .parse("b:b");
+
+    MutableWhitelistConfiguration c = mock(MutableWhitelistConfiguration.class);
+    o.accept(c);
+
+    assertThat(o.toString(), is("basic"));
+    verify(c).base("basic");
     verifyNoMoreInteractions(c);
   }
 
@@ -145,13 +159,16 @@ public class JowliMLParserTest {
 
   @Test
   public void root() {
-    String text = "t:a,b,c;a:dog[a,b,c]";
+    String text = "b:i;t:a,b,c;a:dog[a,b,c]";
     final List<ConfigConsumer> o = JowliMLParser.ROOT.parse(text);
 
     MutableWhitelistConfiguration c = mock(MutableWhitelistConfiguration.class);
     o.forEach(consumer -> consumer.accept(c));
+    
+    assertThat(o.toString(), is("[basicwithimages, [a, b, c], [(dog, [a, b, c])]]"));
 
-    assertThat(o.toString(), is("[[a, b, c], [(dog, [a, b, c])]]"));
+    verify(c).base("basicwithimages");
+    
     verify(c).allowTag("a");
     verify(c).allowTag("b");
     verify(c).allowTag("c");

@@ -1,5 +1,6 @@
 package io.shick.jsoup.gson;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -206,6 +207,33 @@ public class GsonWhitelistConfigurationTest {
     assertThat(stripped(json), is(stripped(actual)));
     assertThat(config, is(config2));
   }
+
+  @Test(expected = IllegalStateException.class)
+  public void invalidBase() throws ParseException {
+    String text = "{ \"base\":\"basic2\" }"; // use 'basic'
+    final WhitelistConfiguration c = new GsonParser().parse(text);
+    c.whitelist();
+  }
+  
+  @Test
+  public void baseCanBeSpecified() throws ParseException {
+    String text = "{ \"base\":\"basic\" }"; // use 'basic'
+    final WhitelistConfiguration c = new GsonParser().parse(text);
+
+    Whitelist wl = c.whitelist();
+    Whitelist basic = Whitelist.basic();
+    String html = "<a href=\"http://x\">To X</a>";
+    assertThat("Basic will add rel=nofollow to links.",
+      Jsoup.clean(html, wl),
+      is(Jsoup.clean(html, basic)));
+    assertThat("Basic will add rel=nofollow to links.",
+      Jsoup.clean(html, wl),
+      containsString("nofollow"));
+
+
+    assertThat(c.toString(), is(new GsonFormatter().format(c)));
+  }
+
 
   private String stripped(String json) {
     return json.replaceAll("[\\n\\s]", "");

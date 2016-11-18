@@ -1,15 +1,22 @@
 package io.shick.jsoup.jowli;
 
+import static io.shick.jsoup.jowli.JowliMLFormatter.LETTER_BASIC;
+import static io.shick.jsoup.jowli.JowliMLFormatter.LETTER_BASICWITHIMAGES;
+import static io.shick.jsoup.jowli.JowliMLFormatter.LETTER_NONE;
+import static io.shick.jsoup.jowli.JowliMLFormatter.LETTER_RELAXED;
 import static org.codehaus.jparsec.Parsers.between;
+import static org.codehaus.jparsec.Parsers.or;
 import static org.codehaus.jparsec.Parsers.sequence;
 import static org.codehaus.jparsec.Scanners.isChar;
 
+import io.shick.jsoup.BaseFactories;
 import io.shick.jsoup.WhitelistConfiguration;
 import io.shick.jsoup.WhitelistConfigurationParser;
 import io.shick.jsoup.WhitelistConfigurationParserFactory;
 import io.shick.jsoup.jowli.ast.AllowedAttributes;
 import io.shick.jsoup.jowli.ast.AllowedTags;
 import io.shick.jsoup.jowli.ast.Attr;
+import io.shick.jsoup.jowli.ast.BaseWhitelist;
 import io.shick.jsoup.jowli.ast.ConfigConsumer;
 import io.shick.jsoup.jowli.ast.EnforcedAttributes;
 import io.shick.jsoup.jowli.ast.Prot;
@@ -119,13 +126,26 @@ public final class JowliMLParser implements WhitelistConfigurationParser {
       COLON,
       commaed(TAG_ATTR_PROTOCOLS),
       (__, ___, v) -> new Protocols(v));
+  
+  static final Parser<BaseWhitelist> BASE_DIRECTIVE =
+    sequence(
+      isChar('b'),
+      COLON,
+      or(
+        isChar(LETTER_BASIC).retn(BaseFactories.BASIC),
+        isChar(LETTER_BASICWITHIMAGES).retn(BaseFactories.BASICWITHIMAGES),
+        isChar(LETTER_RELAXED).retn(BaseFactories.RELAXED),
+        isChar(LETTER_NONE).retn(BaseFactories.NONE)),
+      (__, ___, b) -> new BaseWhitelist(b)
+    );
 
   static final Parser<List<ConfigConsumer>> ROOT =
     Parsers.<ConfigConsumer>or(
       ALLOWED_ATTRIBUTES_DIRECTIVE,
       ENFORCED_ATTRIBUTES_DIRECTIVE,
       PROTOCOLS_DIRECTIVE,
-      ALLOWED_TAGS_DIRECTIVE).sepBy(isChar(';'));
+      ALLOWED_TAGS_DIRECTIVE,
+      BASE_DIRECTIVE).sepBy(isChar(';'));
 
   /**
    * {@inheritDoc}

@@ -58,6 +58,7 @@ public class GsonFormatterTest {
   public void format() throws ParseException {
     final String json = "\n"
       + "{\n"
+      + "  \"base\" : \"none\",\n"
       + "  \"tags\" : [\"a\",\"b\"],\n"
       + "  \"attributes\" : {\n"
       + "    \"blockquote\": [\"cite\"]\n"
@@ -86,6 +87,7 @@ public class GsonFormatterTest {
   public void emptyCollectionsAreNull() throws ParseException {
     final String json = "\n"
       + "{\n"
+      + "  \"base\" : null,\n"
       + "  \"tags\" : [],\n"
       + "  \"attributes\" : {},\n"
       + "  \"enforcedAttributes\": {},\n"
